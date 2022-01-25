@@ -4,7 +4,7 @@ class Transaction {
   // Blueprint or model of a transaction
   final String? id;
   final String? title;
-  final double? amount;
+  final int? amount;
   final DateTime? date;
 
   Transaction(

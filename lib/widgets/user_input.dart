@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
-class UserInput extends StatelessWidget {
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+class UserInput extends StatefulWidget {
   final Function addTransaction;
 
   UserInput(this.addTransaction);
+
+  @override
+  State<UserInput> createState() => _UserInputState();
+}
+
+class _UserInputState extends State<UserInput> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +37,8 @@ class UserInput extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                  addTransaction(titleController.text,
-                      double.parse(amountController.text));
+                  widget.addTransaction(
+                      titleController.text, int.parse(amountController.text));
                 },
                 child: Text(
                   "Add Transaction!",
