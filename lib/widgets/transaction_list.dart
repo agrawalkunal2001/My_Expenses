@@ -20,13 +20,20 @@ class TransactionList extends StatelessWidget {
                   width: 150,
                   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 2),
+                    border: Border.all(
+                      width: 2,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                   padding: EdgeInsets.all(5),
                   child: Text(
                     "\u{20B9}${userTransaction[index].amount}", // \u{20B9} is used to get rupee symbol and ${tx.amount} is equivalent to tx.amount.toString()
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
                 Column(

@@ -14,6 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "My Expenses",
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        accentColor: Colors.deepOrange,
+        fontFamily: "Quicksand",
+      ),
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
@@ -40,7 +46,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _userTransaction.add(newTx);
     });
-    Navigator.of(context).pop();
+    Navigator.of(context)
+        .pop(); // Closes the modal sheet when button is clicked
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -66,7 +73,10 @@ class _HomePageState extends State<HomePage> {
                 size: 40,
               ))
         ],
-        title: const Text("My Expenses"),
+        title: const Text(
+          "My Expenses",
+          style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
