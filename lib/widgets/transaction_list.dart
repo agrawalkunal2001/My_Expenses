@@ -10,53 +10,75 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 600,
-      child: ListView.builder(
-        itemBuilder: (ctx, index) {
-          return Card(
-            elevation: 5,
-            child: Row(
+      child: userTransaction.isEmpty
+          ? Column(
               children: <Widget>[
                 Container(
-                  width: 150,
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  padding: EdgeInsets.all(5),
-                  child: Text(
-                    "\u{20B9}${userTransaction[index].amount}", // \u{20B9} is used to get rupee symbol and ${tx.amount} is equivalent to tx.amount.toString()
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Theme.of(context).primaryColor,
-                    ),
+                  height: 200,
+                  child: Image.asset(
+                    "assets/images/waiting.png",
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      userTransaction[index].title.toString(),
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    Text(
-                      DateFormat.yMMMMd()
-                          .format(userTransaction[index].date as DateTime),
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "No transactions yet!",
+                  style: TextStyle(fontFamily: "Quicksand-Bold", fontSize: 20),
                 ),
               ],
+            )
+          : ListView.builder(
+              itemBuilder: (ctx, index) {
+                return Card(
+                  margin: EdgeInsets.fromLTRB(15.0, 2.0, 15.0, 5.0),
+                  elevation: 5,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: 150,
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          "\u{20B9}${userTransaction[index].amount}", // \u{20B9} is used to get rupee symbol and ${tx.amount} is equivalent to tx.amount.toString()
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: "OpenSans",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            userTransaction[index].title.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          Text(
+                            DateFormat.yMMMMd().format(
+                                userTransaction[index].date as DateTime),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+              itemCount: userTransaction.length,
             ),
-          );
-        },
-        itemCount: userTransaction.length,
-      ),
     );
   }
 }

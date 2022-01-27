@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_expenses/widgets/chart.dart';
 import 'package:my_expenses/widgets/transaction_list.dart';
 import 'package:my_expenses/widgets/user_input.dart';
 
@@ -33,9 +34,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Transaction> _userTransaction = [
-    Transaction(id: "t1", title: "Veggies", amount: 200, date: DateTime.now()),
-    Transaction(id: "t2", title: "Clothes", amount: 1000, date: DateTime.now()),
+    // Transaction(id: "t1", title: "Veggies", amount: 200, date: DateTime.now()),
+    // Transaction(id: "t2", title: "Clothes", amount: 1000, date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransaction.where((tx) {
+      /* This "where" runs a function over all the elements of the list and whichever elements returns true, it is added to a newly returned list*/
+      return tx.date!.isAfter(DateTime.now().subtract(Duration(
+          days:
+              7))); // This return true if the transaction happened within the last week
+    }).toList();
+  }
 
   void _addTransactions(String txTitle, int txAmount) {
     final newTx = Transaction(
@@ -83,10 +93,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Card(
-              color: Colors.blue,
-              child: Text("Chart!"),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_userTransaction),
           ],
         ),
