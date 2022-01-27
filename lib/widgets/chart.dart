@@ -30,7 +30,7 @@ class Chart extends StatelessWidget {
             weekDay) /* This retrieves the initials of the input weekday. For example, M for monday etc.*/,
         "amount": totalAmount
       };
-    });
+    }).reversed.toList();
   }
 
   int get totalAmountSpent {
@@ -49,7 +49,7 @@ class Chart extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment
               .spaceEvenly, // So that all bars are spaced evenly in the card
-          children: groupedTransactionValues.reversed.map((data) {
+          children: groupedTransactionValues.map((data) {
             return Flexible(
               fit: FlexFit
                   .tight, // It ensures that the bar takes only the space alloted to it and no extra space.

@@ -47,17 +47,23 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
-  void _addTransactions(String txTitle, int txAmount) {
+  void _addTransactions(String txTitle, int txAmount, DateTime date) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
         title: txTitle,
         amount: txAmount,
-        date: DateTime.now());
+        date: date);
     setState(() {
       _userTransaction.add(newTx);
     });
     Navigator.of(context)
         .pop(); // Closes the modal sheet when button is clicked
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransaction.removeWhere((element) => element.id == id);
+    });
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -94,7 +100,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransaction),
+            TransactionList(_userTransaction, _deleteTransaction),
           ],
         ),
       ),
