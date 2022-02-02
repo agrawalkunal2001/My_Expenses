@@ -77,30 +77,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                _startAddNewTransaction(context);
-              },
-              icon: Icon(
-                Icons.add,
-                size: 40,
-              ))
-        ],
-        title: const Text(
-          "My Expenses",
-          style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
-        ),
+    final appBar = AppBar(
+      actions: <Widget>[
+        IconButton(
+            onPressed: () {
+              _startAddNewTransaction(context);
+            },
+            icon: Icon(
+              Icons.add,
+              size: 40,
+            ))
+      ],
+      title: const Text(
+        "My Expenses",
+        style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
       ),
+    );
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_userTransaction, _deleteTransaction),
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.25, // Calculate the height of chart dynamically based on device sizes
+                child: Chart(_recentTransactions)),
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.75, // Calculate the height of transaction list dynamically based on device sizes
+                child: TransactionList(_userTransaction, _deleteTransaction)),
           ],
         ),
       ),
