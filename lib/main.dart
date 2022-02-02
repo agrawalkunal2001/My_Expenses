@@ -1,3 +1,4 @@
+// import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:my_expenses/widgets/chart.dart';
 import 'package:my_expenses/widgets/transaction_list.dart';
@@ -6,6 +7,11 @@ import 'package:my_expenses/widgets/user_input.dart';
 import 'models/transaction.dart';
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown
+  // ]); // This is a system level setting which restricts the usage of app in landscape mode.
   runApp(const MyApp());
 }
 
@@ -37,6 +43,8 @@ class _HomePageState extends State<HomePage> {
     // Transaction(id: "t1", title: "Veggies", amount: 200, date: DateTime.now()),
     // Transaction(id: "t2", title: "Clothes", amount: 1000, date: DateTime.now()),
   ];
+
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _userTransaction.where((tx) {
@@ -77,6 +85,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       actions: <Widget>[
         IconButton(
@@ -93,25 +103,53 @@ class _HomePageState extends State<HomePage> {
         style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
       ),
     );
+    final txListWidget = Container(
+        height: (MediaQuery.of(context).size.height -
+                appBar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.75, // Calculate the height of transaction list dynamically based on device sizes
+        child: TransactionList(_userTransaction, _deleteTransaction));
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.25, // Calculate the height of chart dynamically based on device sizes
-                child: Chart(_recentTransactions)),
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.75, // Calculate the height of transaction list dynamically based on device sizes
-                child: TransactionList(_userTransaction, _deleteTransaction)),
+          children: [
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Show Chart!",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showChart = val;
+                        });
+                      }),
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.25, // Calculate the height of chart dynamically based on device sizes
+                  child: Chart(_recentTransactions)),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.60, // Calculate the height of chart dynamically based on device sizes
+                      child: Chart(_recentTransactions))
+                  : txListWidget
           ],
         ),
       ),

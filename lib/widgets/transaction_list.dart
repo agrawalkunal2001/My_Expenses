@@ -11,24 +11,28 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: userTransaction.isEmpty
-          ? Column(
-              children: <Widget>[
-                Container(
-                  height: 200,
-                  child: Image.asset(
-                    "assets/images/waiting.png",
-                    fit: BoxFit.cover,
+          ? LayoutBuilder(builder: (ctx, constraint) {
+              // We can use constraints to set the height and width of elements of widgets inside dynamically based on the size of widget applied outside.
+              return Column(
+                children: <Widget>[
+                  Container(
+                    height: constraint.maxHeight * 0.55,
+                    child: Image.asset(
+                      "assets/images/waiting.png",
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "No transactions yet!",
-                  style: TextStyle(fontFamily: "Quicksand-Bold", fontSize: 20),
-                ),
-              ],
-            )
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "No transactions yet!",
+                    style:
+                        TextStyle(fontFamily: "Quicksand-Bold", fontSize: 20),
+                  ),
+                ],
+              );
+            })
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
