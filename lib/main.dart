@@ -1,5 +1,7 @@
+import 'dart:io';
 // import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:my_expenses/widgets/chart.dart';
 import 'package:my_expenses/widgets/transaction_list.dart';
 import 'package:my_expenses/widgets/user_input.dart';
@@ -87,82 +89,113 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    final appBar = AppBar(
-      actions: <Widget>[
-        IconButton(
-            onPressed: () {
-              _startAddNewTransaction(context);
-            },
-            icon: Icon(
-              Icons.add,
-              size: 40,
+
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: const Text(
+              "My Expenses",
+              style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () {
+                    _startAddNewTransaction(context);
+                  },
+                )
+              ],
             ))
-      ],
-      title: const Text(
-        "My Expenses",
-        style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
-      ),
-    );
+        : AppBar(
+            actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    _startAddNewTransaction(context);
+                  },
+                  icon: Icon(
+                    Icons.add,
+                    size: 40,
+                  ))
+            ],
+            title: const Text(
+              "My Expenses",
+              style: TextStyle(fontFamily: "OpenSans-Bold", fontSize: 23),
+            ),
+          ) as PreferredSizeWidget;
+
     final txListWidget = Container(
         height: (MediaQuery.of(context).size.height -
                 appBar.preferredSize.height -
                 MediaQuery.of(context).padding.top) *
             0.75, // Calculate the height of transaction list dynamically based on device sizes
         child: TransactionList(_userTransaction, _deleteTransaction));
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Show Chart!",
-                    style: TextStyle(fontSize: 20),
+
+    final pageBody = SafeArea(
+        child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isLandscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Show Chart!",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Switch.adaptive(
+                    activeColor: Theme.of(context).accentColor,
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    }),
+              ],
+            ),
+          if (!isLandscape)
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.25, // Calculate the height of chart dynamically based on device sizes
+                child: Chart(_recentTransactions)),
+          if (!isLandscape) txListWidget,
+          if (isLandscape)
+            _showChart
+                ? Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.60, // Calculate the height of chart dynamically based on device sizes
+                    child: Chart(_recentTransactions))
+                : txListWidget
+        ],
+      ),
+    ));
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar as ObstructingPreferredSizeWidget,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () {
+                      _startAddNewTransaction(context);
+                    },
+                    child: Icon(
+                      Icons.add,
+                      size: 50,
+                    ),
                   ),
-                  Switch(
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                        });
-                      }),
-                ],
-              ),
-            if (!isLandscape)
-              Container(
-                  height: (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      0.25, // Calculate the height of chart dynamically based on device sizes
-                  child: Chart(_recentTransactions)),
-            if (!isLandscape) txListWidget,
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: (MediaQuery.of(context).size.height -
-                              appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
-                          0.60, // Calculate the height of chart dynamically based on device sizes
-                      child: Chart(_recentTransactions))
-                  : txListWidget
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _startAddNewTransaction(context);
-        },
-        child: Icon(
-          Icons.add,
-          size: 50,
-        ),
-      ),
-    );
+          );
   }
 }

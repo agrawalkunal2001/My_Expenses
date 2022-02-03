@@ -34,59 +34,67 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: "Title"),
-              controller: titleController,
-              maxLength: 15,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Amount"),
-              keyboardType: TextInputType.number,
-              controller: amountController,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(children: <Widget>[
-              Expanded(
-                child: Text(
-                  selectedDate == null
-                      ? "No date chosen!"
-                      : DateFormat.yMMMMd().format(selectedDate!),
-                  style: TextStyle(fontSize: 17),
-                ),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: 10,
+              left: 10,
+              right: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom +
+                  10), // View insets identifies if something is lapping in the view, i.e., soft-keyboard. Bottom property gives the space occupied by the soft-keyboard.
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: "Title"),
+                controller: titleController,
+                maxLength: 15,
               ),
-              TextButton(
+              TextField(
+                decoration: InputDecoration(labelText: "Amount"),
+                keyboardType: TextInputType.number,
+                controller: amountController,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(children: <Widget>[
+                Expanded(
+                  child: Text(
+                    selectedDate == null
+                        ? "No date chosen!"
+                        : DateFormat.yMMMMd().format(selectedDate!),
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                TextButton(
+                    onPressed: () {
+                      _showDatePicker();
+                    },
+                    child: Text(
+                      "Choose Date",
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    )),
+              ]),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
                   onPressed: () {
-                    _showDatePicker();
+                    widget.addTransaction(titleController.text,
+                        int.parse(amountController.text), selectedDate);
                   },
                   child: Text(
-                    "Choose Date",
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    "Add Transaction!",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   )),
-            ]),
-            SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  widget.addTransaction(titleController.text,
-                      int.parse(amountController.text), selectedDate);
-                },
-                child: Text(
-                  "Add Transaction!",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                )),
-          ],
+            ],
+          ),
         ),
       ),
     );
