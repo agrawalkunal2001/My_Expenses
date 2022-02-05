@@ -1,6 +1,6 @@
 # My_Expenses
 
-This is a personal expenses app which can be used to store and track the amount of money spent in the last week.
+This is a responsive and adaptive personal expenses app which can be used to store and track the amount of money spent in the last week.
 
 The transactions can be added and deleted along with the date of transaction. The chart at the top shows the relative amount of money spent each day in the last week.
 
