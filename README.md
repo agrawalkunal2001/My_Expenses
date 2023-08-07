@@ -1,4 +1,4 @@
-# My_Expenses
+# MyExpenses
 
 This is a responsive and adaptive personal expenses app which can be used to store and track the amount of money spent in the last week.
 
